@@ -1,0 +1,49 @@
+# 1
+select * from clientes
+order by nome
+limit 5;
+
+# 2
+select *
+from produtos 
+where descricao is null;
+
+# 3
+select * from funcionarios
+where left(nome, 1) = 'a' and right(nome, 1) = 's';
+
+# 4
+select departamento, AVG(salario) as media_salarial
+from funcionarios
+group by departamento
+having media_salarial > 5000;
+
+# 5
+select Concat(nome + ' ' + sobrenome) as nome_completo, length(nome_completo)
+from clientes;
+
+# 6
+select id, data_venda, datediff(now(), data_venda)
+from vendas;
+
+# 7
+select descricao, round(preco_total)
+from pedidos;
+
+# 8
+select descricao, date(data_acontecimento) as data_convertida
+from eventos
+having data_convertida > '2023-01-01';
+
+# 9
+select id, descricao,
+case
+when nota between 0 and 4 then 'Ruim'
+when nota between 4 and 8 then 'Media'
+else 'Boa'
+end as descricao_notas
+from avaliacoes;
+
+# 10
+alter table funcionarios rename column data_nasc to data_nascimento;
+select * from funcionarios where CAST(data_nascimento AS DATE) > '1990-01-01';
