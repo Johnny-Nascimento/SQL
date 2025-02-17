@@ -1,0 +1,27 @@
+# 1
+select avg(Nota) as media_notas
+from notas
+where id_disciplina = 2;
+
+# 2
+select * 
+from alunos
+where nome_aluno like('A%');
+
+# 3
+select * from alunos where month(Data_Nascimento) = 2;
+
+# 4
+select *, floor(datediff(now(), data_nascimento) / 365) as idade from alunos;
+
+# 5
+select 
+(
+select nome_aluno from alunos where id_aluno = notas.id_aluno
+) AS NomeAluno,
+case
+when nota >= 6 then 'Aprovado'
+else 'Reprovado'
+end as situacao,
+nota
+from notas
