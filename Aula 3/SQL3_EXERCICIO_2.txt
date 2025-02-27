@@ -1,0 +1,9 @@
+1 - Buscar o nome do professor e a turma que ele é orientador
+
+2 - Retornar o nome e a nota do aluno que possui a melhor nota na disciplina de Matemática
+
+3 - Identificar o total de alunos por turma
+
+4 - Listar os Alunos e as disciplinas em que estão matriculados
+
+5 - Criar uma view que apresenta o nome, a disciplina e a nota dos alunos

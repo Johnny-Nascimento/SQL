@@ -1,0 +1,33 @@
+#1: Buscar o nome do professor e a turma que ele é orientador
+
+select prof.nome_professor, nome_turma from turmas
+join professores prof on prof.id_professor = id_professor_orientador;
+
+#2: Retornar o nome e a nota do aluno que possui a melhor nota na disciplina de Matemática
+
+select al.nome_aluno, nota from notas n
+join alunos al on al.id_aluno = n.id_aluno
+join disciplinas disc on disc.id_disciplina = n.id_disciplina
+where disc.Nome_Disciplina = 'Matemática'
+order by nota desc
+limit 1;
+
+#3: Identificar o total de alunos por turma
+
+select count(id_aluno), id_turma from turma_alunos
+group by id_turma;
+
+#4: Listar os Alunos e as disciplinas em que estão matriculados
+
+select al.nome_aluno, disc.nome_disciplina from turma_disciplinas td
+join turma_alunos ta on ta.id_turma = td.id_turma
+join alunos al on al.id_aluno = ta.id_aluno
+join disciplinas disc on disc.ID_Disciplina = td.ID_Disciplina;
+
+#5: Criar uma view que apresenta o nome, a disciplina e a nota dos alunos
+
+create view alunosNotasDisciplinas as
+select al.nome_aluno, disc.nome_disciplina, nt.nota from notas nt
+join alunos al on al.id_aluno = nt.id_aluno
+join disciplinas disc on disc.ID_Disciplina = nt.id_disciplina
+order by Nome_Aluno;

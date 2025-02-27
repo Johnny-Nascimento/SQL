@@ -1,0 +1,43 @@
+# 1 -  Traga todos os dados da cliente Maria Silva.
+select * from clientes where nome = 'Maria silva';
+# 2 -  Busque o ID do pedidov e o ID do cliente dos pedidos onde o status esteja como entregue.
+select id, idcliente from pedidos where status = 'Entregue';
+# 3 -  Retorne todos os produtos onde o preço seja maior que 10 e menor que 15.
+select * from produtos where preco > 10 and preco < 15;
+# 4 -  Busque o nome e cargo dos colaboradores que foram contratados entre 2022-01-01 e 2022-06-31.
+select nome, cargo from colaboradores where datacontratacao > '2022-01-01' and datacontratacao < '2022-06-31';
+# 5 -  Recupere o nome do cliente que fez o primeiro pedido.
+select c.nome from pedidos p
+join clientes c on c.id = idcliente
+order by p.id
+limit 1;
+# 6 -  Liste os produtos que nunca foram pedidos.
+select * from itenspedidos ip
+right join produtos p on p.id =  ip.idproduto
+where idpedido is null;
+# 7 -  Liste os nomes dos clientes que fizeram pedidos entre 2023-01-01 e 2023-12-31 e as quantidades de pedidos realizados.
+select c.nome, count(*) from pedidos p
+join clientes c on p.idcliente = c.id
+where datahorapedido > '2023-01-01' and datahorapedido < '2023-12-31'
+group by c.nome;
+
+# 8 -  Recupere os nomes dos produtos que estão em menos de 15 pedidos.
+select p.nome, count(*) from itenspedidos 
+join produtos p on p.id = idproduto
+group by idproduto
+having count(*) < 15;
+
+# 9 -  Liste os produtos, nome do cliente e o ID do pedido que foram realizados pelo cliente "Pedro Alves" ou pela cliente "Ana Rodrigues".
+select prod.nome, idpedido, cli.nome from itenspedidos
+join produtos prod on prod.id = idproduto
+join pedidos  ped on ped.id = idpedido
+join clientes cli on cli.id = ped.idcliente
+where cli.nome = 'Pedro Alves' or cli.nome = 'Ana Rodrigues'
+order by ped.id desc;
+
+# 10 - Recupere o nome e o ID do cliente que mais comprou(valor) no Serenatto.
+select cli.nome, cli.id, sum(quantidade * precounitario) from itenspedidos
+join pedidos ped on ped.id = idpedido
+join clientes cli on cli.id = ped.idcliente
+group by cli.id
+having sum(quantidade * precounitario);
