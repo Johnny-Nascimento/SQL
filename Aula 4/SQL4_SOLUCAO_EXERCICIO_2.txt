@@ -1,0 +1,75 @@
+# 1: Retorne todas as disciplina
+
+select * from disciplinas;
+
+# 2: Retorne os alunos que estão aprovados na disciplina de matemática
+
+select Nome_Aluno, nota from notas n
+join alunos a on a.ID_Aluno = n.ID_Aluno
+where ID_Disciplina = 1 and Nota > 6;
+
+# 3: Identificar o total de disciplinas por turma
+
+select count(*) from turma_disciplinas
+group by ID_Turma;
+
+# 4: Porcentagem dos alunos que estão aprovados
+
+SELECT
+    round((COUNT(DISTINCT ID_Aluno) * 100.0) / (SELECT COUNT(*) FROM alunos), 2) AS percentual_aprovados
+FROM notas
+GROUP BY ID_Aluno
+HAVING MIN(nota) >= 6;
+
+## solucao robada
+
+SELECT
+    (SELECT COUNT(*) FROM Alunos) AS Total_Alunos,
+    (SELECT COUNT(*) FROM Alunos a JOIN Notas n ON n.ID_Aluno = a.ID_Aluno WHERE n.Nota >= 7.0) AS Alunos_Aprovados,
+    (SELECT COUNT(*) FROM Notas) AS Total_Notas,
+    (ROUND(100.0 * (SELECT COUNT(*) FROM Alunos a JOIN Notas n ON n.ID_Aluno = a.ID_Aluno WHERE n.Nota >= 7.0) / (SELECT COUNT(*) 
+    FROM Notas), 2) || '%') AS Porcentagem
+
+
+# 5: Porcentagem dos alunos que estão aprovados por disciplina
+
+select  count(*),
+SUM(CASE WHEN id_disciplina = 1 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 1) AS "Matemática",
+SUM(CASE WHEN id_disciplina = 2 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 2) AS "História",
+SUM(CASE WHEN id_disciplina = 3 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 3) AS "Física",
+SUM(CASE WHEN id_disciplina = 4 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 4) AS "Química",
+SUM(CASE WHEN id_disciplina = 5 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 5) AS "Inglês",
+SUM(CASE WHEN id_disciplina = 6 THEN 1 ELSE 0 END) * 100 / (select count(*) from notas where id_disciplina = 6) AS "Artes"
+from notas
+where Nota >= 6
+group by ID_Disciplina;
+
+
+## solução robada vv
+SELECT 
+    id_disciplina,
+    COUNT(DISTINCT CASE WHEN aprovado = 1 THEN ID_Aluno END) * 100.0 / 
+    (SELECT COUNT(DISTINCT ID_Aluno) FROM notas WHERE id_disciplina = n.id_disciplina) AS percentual_aprovados
+FROM (
+    SELECT 
+        ID_Aluno, 
+        id_disciplina,
+        CASE WHEN MIN(nota) >= 6 THEN 1 ELSE 0 END AS aprovado
+    FROM notas
+    GROUP BY ID_Aluno, id_disciplina
+) AS n
+GROUP BY id_disciplina;
+
+ SELECT 
+    d.Nome_Disciplina AS Disciplina,
+    COUNT(*) AS Total_Alunos,
+    SUM(CASE WHEN n.Nota >= 7.0 THEN 1 ELSE 0 END) AS Alunos_Aprovados,
+    ROUND (SUM(CASE WHEN n.Nota >= 7.0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) || '%' AS Porcentagem_Aprovados
+FROM 
+    Alunos a 
+JOIN 
+    Notas n ON n.ID_Aluno = a.ID_Aluno
+JOIN 
+    Disciplinas d ON d.ID_Disciplina = n.ID_Disciplina
+GROUP BY 
+    Disciplina;
